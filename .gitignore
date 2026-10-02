@@ -1,0 +1,16 @@
+# Build outputs
+AgentDesk.exe
+*.pdb
+*.obj
+*.tmp
+
+# Local release archives
+release/
+*.zip
+
+# Windows metadata
+*.user
+*.suo
+*.vs/
+*.vscode/
+*.Zone.Identifier
