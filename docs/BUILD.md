@@ -9,7 +9,7 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe
 C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe
 ```
 
-输出文件为仓库根目录的 `AgentDesk.exe`。构建过程只依赖 .NET Framework 自带程序集：Windows Forms、Drawing、XML 和 UI Automation。
+输出文件为仓库根目录的 `AgentDock.exe`。构建过程只依赖 .NET Framework 自带程序集：Windows Forms、Drawing、XML 和 UI Automation。
 
 ## 验证清单
 
@@ -29,11 +29,11 @@ C:\Windows\Microsoft.NET\Framework\v4.0.30319\csc.exe
 发布包至少包含：
 
 ```text
-AgentDesk.exe
-AgentDesk.ico
+AgentDock.exe
+AgentDock.ico
 README.md
 ```
 
-发布包不包含用户的 `%LOCALAPPDATA%\AgentDesk` 数据，也不包含浏览器配置文件、登录信息或聊天记录。
+发布包不包含用户的 `%LOCALAPPDATA%\AgentDock` 数据，也不包含浏览器配置文件、登录信息或聊天记录。
 
-版本号采用 `vMAJOR.MINOR.PATCH`。首个公开版本为 `v0.1.0`，表示功能可用但窗口挂载和批量发送仍受浏览器更新及网站结构影响。
+版本号采用 `vMAJOR.MINOR.PATCH`。`v0.1.1` 是首个统一使用 AgentDock 名称的发布版本；窗口挂载和批量发送仍受浏览器更新及网站结构影响。

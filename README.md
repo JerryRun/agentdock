@@ -16,7 +16,7 @@ AgentDock 是一个 Windows 桌面工作台：参考 Windows Terminal 的标签�
 
 ## 下载运行
 
-从 GitHub Releases 下载 `AgentDesk-v0.1.0-win-x64.zip`，解压后运行 `AgentDesk.exe`。
+从 GitHub Releases 下载 `AgentDock-v0.1.1-win-x64.zip`，解压后运行 `AgentDock.exe`。
 
 程序默认最大化，但不会覆盖系统任务栏。点击顶部 `+` 新建标签页，点击下拉按钮可以打开收藏、创建横向窗格或进入命令面板。
 
@@ -49,21 +49,21 @@ AgentDock 是一个 Windows 桌面工作台：参考 Windows Terminal 的标签�
 build.cmd
 ```
 
-构建输出为 `AgentDesk.exe`。脚本使用系统 .NET Framework 编译器和仓库中的 `AgentDesk.ico`，不需要 NuGet 或联网下载依赖。
+构建输出为 `AgentDock.exe`。脚本使用系统 .NET Framework 编译器和仓库中的 `AgentDock.ico`，不需要 NuGet 或联网下载依赖。
 
 也可以使用 PowerShell：
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\build.cmd
-.\AgentDesk.exe
+.\AgentDock.exe
 ```
 
 ## 数据和隐私
 
 AgentDock 只负责启动、挂载和排列本机浏览器窗口。网页内容、登录凭据和聊天记录由浏览器自己的用户配置文件管理，程序不会调用 AI 服务 API，也不会上传消息。
 
-本地工作区数据保存在 `%LOCALAPPDATA%\AgentDesk`：
+本地工作区数据保存在 `%LOCALAPPDATA%\AgentDock`：
 
 - `favorites.txt`：网址收藏
 - `workspaces.xml`：标签页收藏和窗格布局
@@ -81,9 +81,9 @@ AgentDock 只负责启动、挂载和排列本机浏览器窗口。网页内容�
 ## 项目结构
 
 ```text
-AgentDesk.cs       主程序和 Win32/UI Automation 逻辑
-AgentDesk.ico      应用多尺寸图标
-AgentDesk-icon.png 图标预览图
+AgentDock.cs       主程序和 Win32/UI Automation 逻辑
+AgentDock.ico      应用多尺寸图标
+AgentDock-icon.png 图标预览图
 build.cmd          Windows 本地构建脚本
 docs/BUILD.md      构建、测试和发布说明
 ```

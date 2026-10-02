@@ -1,5 +1,5 @@
 # Build outputs
-AgentDesk.exe
+AgentDock.exe
 *.pdb
 *.obj
 *.tmp

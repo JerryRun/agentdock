@@ -908,9 +908,9 @@ internal sealed class MainForm : Form
     private readonly HashSet<ToolStripDropDown> openMenus = new HashSet<ToolStripDropDown>();
     private readonly List<FavoriteItem> favoriteItems = new List<FavoriteItem>();
     private readonly List<WorkspaceBookmark> workspaceFavorites = new List<WorkspaceBookmark>();
-    private readonly string favoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDesk", "favorites.txt");
-    private readonly string workspaceFavoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDesk", "workspaces.xml");
-    private readonly string settingsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDesk", "settings.txt");
+    private readonly string favoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDock", "favorites.txt");
+    private readonly string workspaceFavoritesFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDock", "workspaces.xml");
+    private readonly string settingsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AgentDock", "settings.txt");
     private readonly System.Threading.SemaphoreSlim launchLock = new System.Threading.SemaphoreSlim(1, 1);
     private readonly ToolTip tooltips = new ToolTip();
     private readonly System.Windows.Forms.Timer browserMonitor = new System.Windows.Forms.Timer { Interval = 250 };
@@ -1015,7 +1015,7 @@ internal sealed class MainForm : Form
     {
         try
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AgentDesk.ico");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AgentDock.ico");
             if (File.Exists(path)) using (var source = new Icon(path)) return (Icon)source.Clone();
         }
         catch { }
@@ -1034,7 +1034,7 @@ internal sealed class MainForm : Form
 
     public MainForm()
     {
-        Text = "AgentDesk"; Width = 1280; Height = 820; MinimumSize = new Size(760, 520); StartPosition = FormStartPosition.CenterScreen; FormBorderStyle = FormBorderStyle.None; BackColor = Color.FromArgb(32, 32, 32); ForeColor = Color.White; Font = new Font("Segoe UI", 9); WindowState = FormWindowState.Maximized;
+        Text = "AgentDock"; Width = 1280; Height = 820; MinimumSize = new Size(760, 520); StartPosition = FormStartPosition.CenterScreen; FormBorderStyle = FormBorderStyle.None; BackColor = Color.FromArgb(32, 32, 32); ForeColor = Color.White; Font = new Font("Segoe UI", 9); WindowState = FormWindowState.Maximized;
         appIcon = LoadAppIcon(); if (appIcon != null) Icon = appIcon;
         LoadSettings(); LoadFavorites(); LoadWorkspaceFavorites(); favorites.Renderer = new TabMenuRenderer(); favorites.Font = Font; favorites.Padding = new Padding(0, 4, 0, 4); TrackMenu(favorites); BuildUi(); AddWorkspace("工作区 1");
         browserMonitor.Tick += delegate { RemoveClosedBrowsers(); }; browserMonitor.Start();
@@ -1305,7 +1305,7 @@ internal sealed class MainForm : Form
                 if (bookmarks != null) workspaceFavorites.AddRange(bookmarks.Where(item => item != null && !String.IsNullOrWhiteSpace(item.Name) && item.Panes != null));
             }
         }
-        catch (Exception error) { MessageBox.Show("无法读取标签页收藏：" + error.Message, "AgentDesk", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        catch (Exception error) { MessageBox.Show("无法读取标签页收藏：" + error.Message, "AgentDock", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
     }
     private void SaveWorkspaceFavorite(Workspace workspace)
     {
@@ -1329,7 +1329,7 @@ internal sealed class MainForm : Form
             else File.Move(temporary, workspaceFavoritesFile);
             workspace.FavoriteId = bookmark.Id; workspaceFavorites.Clear(); workspaceFavorites.AddRange(updated); RefreshFavorites();
         }
-        catch (Exception error) { MessageBox.Show(this, "无法保存标签页收藏：" + error.Message, "AgentDesk", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        catch (Exception error) { MessageBox.Show(this, "无法保存标签页收藏：" + error.Message, "AgentDock", MessageBoxButtons.OK, MessageBoxIcon.Error); }
     }
     private void OpenWorkspaceFavorite(WorkspaceBookmark bookmark)
     {
@@ -1383,7 +1383,7 @@ internal sealed class MainForm : Form
             Directory.CreateDirectory(Path.GetDirectoryName(settingsFile));
             File.WriteAllLines(settingsFile, new[] { ((int)splitShortcut).ToString(), ((int)broadcastShortcut).ToString() });
         }
-        catch (Exception error) { MessageBox.Show(this, "无法保存快捷键设置：" + error.Message, "AgentDesk", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        catch (Exception error) { MessageBox.Show(this, "无法保存快捷键设置：" + error.Message, "AgentDock", MessageBoxButtons.OK, MessageBoxIcon.Error); }
     }
     private void ShowShortcutSettings()
     {
@@ -1447,7 +1447,7 @@ internal sealed class MainForm : Form
             broadcasting = false;
             workspace.ActivePane = previousPane;
         }
-        if (failed.Count > 0) MessageBox.Show(this, "以下 Agent Chat 未找到可确认的输入框，未发送：\n" + String.Join("\n", failed), "AgentDesk", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        if (failed.Count > 0) MessageBox.Show(this, "以下 Agent Chat 未找到可确认的输入框，未发送：\n" + String.Join("\n", failed), "AgentDock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
     private void OpenFavorite(FavoriteItem item) { var workspace = CurrentWorkspace(); if (workspace != null && workspace.Panes.Count == 1 && workspace.Launchers.Count == 1 && !workspace.Launchers[0].Busy) workspace.Launchers[0].SetUrl(item.Url); else AddLauncher(item.Url); }
     private void CancelLauncher(BrowserLauncherTile launcher) { var workspace = workspaces.FirstOrDefault(item => item.Launchers.Contains(launcher)); if (workspace == null || launcher.Busy) return; workspace.Launchers.Remove(launcher); workspace.RemovePane(launcher); launcher.Dispose(); if (workspace.Panes.Count == 0 && workspace == selectedWorkspace) AddLauncher(null); }
@@ -1545,14 +1545,14 @@ internal sealed class MainForm : Form
                 if (key == (int)Keys.Return && keyUp) broadcastKeyHeld = false;
                 return NativeMethods.CallNextHookEx(keyboardHook, code, message, data);
             }
-            if (key == (int)Keys.P && keyDown && ModifierDownFromHook(Keys.Control | Keys.Shift) && IsAgentDeskForeground())
+            if (key == (int)Keys.P && keyDown && ModifierDownFromHook(Keys.Control | Keys.Shift) && IsAgentDockForeground())
             {
                 if (!commandKeyHeld) NativeMethods.PostMessage(Handle, CommandPaletteMessage, IntPtr.Zero, IntPtr.Zero);
                 commandKeyHeld = true; return new IntPtr(1);
             }
             if (key == (int)Keys.P && keyUp && commandKeyHeld) { commandKeyHeld = false; return new IntPtr(1); }
             var configuredBroadcastKey = (int)(broadcastShortcut & Keys.KeyCode);
-            if (broadcastShortcut != Keys.None && (key == configuredBroadcastKey || (configuredBroadcastKey == (int)Keys.Oemplus && key == (int)Keys.Add)) && keyDown && ModifierDownFromHook(broadcastShortcut) && IsAgentDeskForeground())
+            if (broadcastShortcut != Keys.None && (key == configuredBroadcastKey || (configuredBroadcastKey == (int)Keys.Oemplus && key == (int)Keys.Add)) && keyDown && ModifierDownFromHook(broadcastShortcut) && IsAgentDockForeground())
             {
                 if (!broadcastKeyHeld) NativeMethods.PostMessage(Handle, BroadcastMessage, IntPtr.Zero, IntPtr.Zero);
                 broadcastKeyHeld = true; return new IntPtr(1);
@@ -1569,7 +1569,7 @@ internal sealed class MainForm : Form
                 {
                     var wasHeld = splitKeyHeld; splitKeyHeld = false; if (wasHeld) return new IntPtr(1);
                 }
-                else if (keyDown && ModifierDownFromHook(splitShortcut) && IsAgentDeskForeground())
+                else if (keyDown && ModifierDownFromHook(splitShortcut) && IsAgentDockForeground())
                 {
                     if (!splitKeyHeld) NativeMethods.PostMessage(Handle, SplitMessage, IntPtr.Zero, IntPtr.Zero);
                     splitKeyHeld = true; return new IntPtr(1);
@@ -1578,7 +1578,7 @@ internal sealed class MainForm : Form
             var activeBrowser = selectedWorkspace == null ? null : selectedWorkspace.ActivePane as BrowserTile;
             var gui = new NativeMethods.GuiThreadInfo { Size = Marshal.SizeOf(typeof(NativeMethods.GuiThreadInfo)) };
             var browserHasFocus = activeBrowser != null && NativeMethods.GetGUIThreadInfo(0, ref gui) && activeBrowser.OwnsFocus(gui.Focus);
-            if ((browserHasFocus || browserInputArmed) && IsAgentDeskForeground() && (eventType == 0x0100 || eventType == 0x0101 || eventType == 0x0104 || eventType == 0x0105))
+            if ((browserHasFocus || browserInputArmed) && IsAgentDockForeground() && (eventType == 0x0100 || eventType == 0x0101 || eventType == 0x0104 || eventType == 0x0105))
             {
                 activeBrowser.ForwardKeyboardMessage(message, data); return new IntPtr(1);
             }
@@ -1640,7 +1640,7 @@ internal sealed class MainForm : Form
     private static bool IsControlKey(int key) { return key == 0x11 || key == 0xA2 || key == 0xA3; }
     private static bool IsShiftKey(int key) { return key == 0x10 || key == 0xA0 || key == 0xA1; }
     private static bool IsAltKey(int key) { return key == 0x12 || key == 0xA4 || key == 0xA5; }
-    private bool IsAgentDeskForeground()
+    private bool IsAgentDockForeground()
     {
         var foreground = NativeMethods.GetForegroundWindow();
         return foreground == Handle || NativeMethods.IsChild(Handle, foreground) || NativeMethods.GetAncestor(foreground, 2) == Handle || NativeMethods.GetAncestor(foreground, 3) == Handle;
